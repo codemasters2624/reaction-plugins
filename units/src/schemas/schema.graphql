@@ -1,0 +1,64 @@
+"Unit configuration data"
+type UnitConfiguration {
+  "The Unit ID"
+  unitId: ID!
+
+  "The UnitVariant ID"
+  unitVariantId: ID!
+}
+
+"A bulk write error type"
+type WriteError {
+  "The documentId(_id) on which the error occurred"
+  documentId: Int
+
+  "Error message for a documentId"
+  errorMsg: String
+}
+
+"Input for adding tags to units in bulk"
+input UnitTagsOperationInput {
+  "An optional string identifying the mutation call, which will be returned in the response payload"
+  clientMutationId: String
+
+  "An array of unit unitIds to which an array of tags will be added"
+  unitIds: [ID]
+
+  "The shop id"
+  shopId: ID!
+
+  "An array of tag ids to add to an array of units"
+  tagIds: [ID]
+}
+
+"Response payload managing tags on units"
+type UnitTagsOperationPayload {
+  "The same string you sent with the mutation params, for matching mutation calls with their responses"
+  clientMutationId: String
+
+  "The number of units found"
+  foundCount: Int
+
+  "The number of units for which a match was not found"
+  notFoundCount: Int
+
+  "The number of units successfully updated"
+  updatedCount: Int
+
+  "An array of write errors if any were generated"
+  writeErrors: [WriteError]
+}
+
+extend type Mutation {
+  "Bulk operation for adding an array of tags to an array of units"
+  addTagsToUnits(
+    "input which must includes an array of unit ids and an array of tag ids"
+    input: UnitTagsOperationInput!
+  ): UnitTagsOperationPayload!
+
+  "Bulk operation for removing an array of tags from an array of units"
+  removeTagsFromUnits(
+    "input which must includes an array of unit ids and an array of tag ids"
+    input: UnitTagsOperationInput!
+  ): UnitTagsOperationPayload!
+}

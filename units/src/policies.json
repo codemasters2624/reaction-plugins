@@ -1,0 +1,16 @@
+[
+  {
+    "description": "Unit managers acting on specific entities.",
+    "subjects": ["reaction:groups:unit-managers"],
+    "resources": ["reaction:legacy:units"],
+    "actions": ["read"],
+    "effect": "allow"
+  },
+  {
+    "description": "Unit managers acting on specific entities.",
+    "subjects": ["reaction:groups:unit-managers"],
+    "resources": ["reaction:legacy:units:*"],
+    "actions": ["archive", "clone", "create", "read", "update"],
+    "effect": "allow"
+  }
+]
