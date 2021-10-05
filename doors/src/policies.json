@@ -1,0 +1,16 @@
+[
+  {
+    "description": "Door managers acting on specific entities.",
+    "subjects": ["reaction:groups:door-managers"],
+    "resources": ["reaction:legacy:doors"],
+    "actions": ["read"],
+    "effect": "allow"
+  },
+  {
+    "description": "Door managers acting on specific entities.",
+    "subjects": ["reaction:groups:door-managers"],
+    "resources": ["reaction:legacy:doors:*"],
+    "actions": ["archive", "clone", "create", "read", "update"],
+    "effect": "allow"
+  }
+]

@@ -1,0 +1,694 @@
+"A Reaction door"
+type Door {
+  "Door ID"
+  _id: ID!
+
+  unit: Unit
+
+  "Height of the Door"
+  height: Float
+
+  "Width of the Door"
+  width: Float
+  "The date and time at which this door was created"
+  createdAt: DateTime!
+
+  "Hash to compare with publishedDoorHash, to see if this door has changed since it was last published"
+  currentDoorHash: String
+
+  "The full door description, which may have newline characters in it"
+  description: String
+
+  "True if this door has been deleted. Typically, deleted doors are not returned in queries."
+  isDeleted: Boolean!
+
+  "True if this door should be shown to shoppers. Typically, non-visible doors are not returned in queries."
+  isVisible: Boolean!
+
+  "All media for a door"
+  media(
+    "Determines whether variant media should be included in the door or not"
+    shouldIncludeVariantMedia: Boolean = true
+  ): [ImageInfo]
+
+  "The door description to use for page `description` meta element in HTML"
+  metaDescription: String
+
+  "Arbitrary additional metadata about this door"
+  metafields: [Metafield]!
+
+  "The country of origin"
+  originCountry: String
+
+  "Subtitle"
+  pageTitle: String
+
+  "An arbitrary door type value, such as from an external system"
+  doorType: String
+
+  "The date and time at which this door was last published. If `null`, it has never been published."
+  publishedAt: DateTime
+
+  "Hash to compare with currentDoorHash, to see if this door has changed since it was last published"
+  publishedDoorHash: String
+
+  "The shop to which this door belongs"
+  shop: Shop!
+
+  "Whether this door will be shown in the generated sitemap"
+  shouldAppearInSitemap: Boolean
+
+  "A URL-safe and human-readable string that uniquely identifies this door"
+  slug: String
+
+  "Holds metadata specific to a specific social network service"
+  socialMetadata: [SocialMetadata]
+
+  "When a shopper purchases this door, what types of fulfillment can they choose from?"
+  supportedFulfillmentTypes: [FulfillmentType]!
+
+  "The list of tag IDs that have been applied to this door"
+  tagIds: [ID]
+
+  "The list of tags that have been applied to this door"
+  tags(
+    "Return only results that come after this cursor. Use this with `first` to specify the number of results to return."
+    after: ConnectionCursor
+
+    "Return only results that come before this cursor. Use this with `last` to specify the number of results to return."
+    before: ConnectionCursor
+
+    "Return at most this many results. This parameter may be used with either `after` or `offset` parameters."
+    first: ConnectionLimitInt
+
+    "Return at most this many results. This parameter may be used with the `before` parameter."
+    last: ConnectionLimitInt
+
+    "Return only results that come after the Nth result. This parameter may be used with the `first` parameter."
+    offset: Int
+
+    "Return results sorted in this order"
+    sortOrder: SortOrder = asc
+
+    "By default, tags are sorted by ID. Set this to sort by one of the other allowed fields"
+    sortBy: TagSortByField = _id
+  ): TagConnection
+
+  "Door title"
+  title: String
+
+  "The date and time at which this door was last updated"
+  updatedAt: DateTime
+
+  "A list of all variants for this door"
+  variants(
+    "Include hidden variants"
+    shouldIncludeHidden: Boolean = true
+
+    "Include archived variants"
+    shouldIncludeArchived: Boolean = false
+  ): [DoorVariant]!
+
+  "A list of all door variants for this door"
+  doorVariants(
+    "Include hidden variants"
+    shouldIncludeHidden: Boolean = true
+
+    "Include archived variants"
+    shouldIncludeArchived: Boolean = false
+  ): [DoorVariant]!
+
+  "A list of all Units for this door"
+  doorUnits(
+    "Include hidden variants"
+    shouldIncludeHidden: Boolean = true
+
+    "Include archived variants"
+    shouldIncludeArchived: Boolean = false
+  ): [Unit]
+
+  temp: String
+
+  "The door vendor or manufacturer, for display"
+  vendor: String
+}
+
+"A Reaction door variant or option"
+type DoorVariant {
+  "Variant ID"
+  _id: ID!
+
+  Unit: [Unit]
+
+  """
+  The attribute label describes the category of variant, for example, `Color` or `Size`.
+  In most cases this will be the same for all variants at the same level.
+  """
+  attributeLabel: String
+
+  "The door variant barcode value, if it has one"
+  barcode: String
+
+  "The date and time at which this variant was created"
+  createdAt: DateTime
+
+  "The height of the door variant, if it has physical dimensions"
+  height: Float
+
+  "The position of this variant among other variants at the same level of the door-variant-option hierarchy"
+  index: Int
+
+  "True if this variant was deleted. Deleted variants are not published to the catalog."
+  isDeleted: Boolean!
+
+  "True if this variant is visible. Hidden variants are not published to the catalog."
+  isVisible: Boolean!
+
+  "The length of the door, if it has physical dimensions"
+  length: Float
+
+  "All media for a variant"
+  media: [ImageInfo]
+
+  "Arbitrary additional metadata about this door"
+  metafields: [Metafield]!
+
+  "The minimum quantity that must be added to a cart"
+  minOrderQuantity: Int
+
+  "A short title to use for door detail select lists"
+  optionTitle: String
+
+  "Child variants, if any"
+  options(
+    "Include hidden variants"
+    shouldIncludeHidden: Boolean = true
+
+    "Include archived variants"
+    shouldIncludeArchived: Boolean = false
+  ): [DoorVariant]!
+
+  "The country of origin"
+  originCountry: String
+
+  "The shop to which this door variant belongs"
+  shop: Shop!
+
+  "SKU of variant"
+  sku: String
+
+  """
+  The full variant title for use on cart, checkout, and order summaries and on invoices.
+  This fully describes the configured variant. For example, if this is an option with
+  `optionTitle` "Large", its parent variant has `optionTitle` `Red`, and the door
+  `title` is "Fancy T-Shirt", then this `title` will be something like `Fancy T-Shirt - Red - Large`.
+  """
+  title: String
+
+  "The date and time at which this door was last updated"
+  updatedAt: DateTime
+
+  "The weight of the door on Earth, if it has physical dimensions"
+  weight: Float
+
+  "The width of the door, if it has physical dimensions"
+  width: Float
+}
+
+"Response payload of `archiveDoors` mutation"
+type ArchiveDoorsPayload {
+  "The same string you sent with the mutation params, for matching mutation calls with their responses"
+  clientMutationId: String
+
+  "Array of newly archived doors"
+  doors: [Door]!
+}
+
+"Response payload of `archiveDoorVariants` mutation"
+type ArchiveDoorVariantsPayload {
+  "The same string you sent with the mutation params, for matching mutation calls with their responses"
+  clientMutationId: String
+
+  "Array of newly archived variants"
+  variants: [DoorVariant]!
+}
+
+"Response payload for `updateDoorsVisibility` mutation"
+type UpdateDoorsVisibilityPayload {
+  "The same string you sent with the mutation params, for matching mutation calls with their responses"
+  clientMutationId: String
+
+  "The number of doors that were updated successfully"
+  updatedCount: Int
+}
+
+"Response payload of `createDoor` mutation"
+type CreateDoorPayload {
+  "The same string you sent with the mutation params, for matching mutation calls with their responses"
+  clientMutationId: String
+
+  "The created door"
+  door: Door!
+}
+
+"Response payload of `createDoorVariant` mutation"
+type CreateDoorVariantPayload {
+  "The same string you sent with the mutation params, for matching mutation calls with their responses"
+  clientMutationId: String
+
+  "The created door variant"
+  variant: DoorVariant!
+}
+
+"Response payload of `cloneDoors` mutation"
+type CloneDoorsPayload {
+  "The same string you sent with the mutation params, for matching mutation calls with their responses"
+  clientMutationId: String
+
+  "Array of newly cloned doors"
+  doors: [Door]!
+}
+
+"Response payload of `cloneDoorVariants` mutation"
+type CloneDoorVariantsPayload {
+  "The same string you sent with the mutation params, for matching mutation calls with their responses"
+  clientMutationId: String
+
+  "Array of newly cloned door variants"
+  variants: [DoorVariant]!
+}
+
+"Response payload of `updateDoor` mutation"
+type UpdateDoorPayload {
+  "The same string you sent with the mutation params, for matching mutation calls with their responses"
+  clientMutationId: String
+
+  "Updated door"
+  door: Door!
+}
+
+"Response payload of `updateDoorVariantField` mutation"
+type UpdateDoorVariantPayload {
+  "The same string you sent with the mutation params, for matching mutation calls with their responses"
+  clientMutationId: String
+
+  "Updated variant"
+  variant: DoorVariant!
+}
+
+"A connection edge in which each node is a `Door` object"
+type DoorEdge {
+  "The cursor that represents this node in the paginated results"
+  cursor: ConnectionCursor!
+
+  "The door"
+  node: Door
+}
+
+"""
+Wraps a list of Doors`s, providing pagination cursors and information.
+
+For information about what Relay-compatible connections are and how to use them, see the following articles:
+- [Relay Connection Documentation](https://facebook.github.io/relay/docs/en/graphql-server-specification.html#connections)
+- [Relay Connection Specification](https://facebook.github.io/relay/graphql/connections.htm)
+- [Using Relay-style Connections With Apollo Client](https://www.apollographql.com/docs/react/recipes/pagination.html)
+"""
+type DoorConnection {
+  "The list of nodes that match the query, wrapped in an edge to provide a cursor string for each"
+  edges: [DoorEdge]
+
+  """
+  You can request the `nodes` directly to avoid the extra wrapping that `NodeEdge` has,
+  if you know you will not need to paginate the results.
+  """
+  nodes: [Door]
+
+  "Information to help a client request the next or previous page"
+  pageInfo: PageInfo!
+
+  "The total number of nodes that match your query"
+  totalCount: Int!
+}
+
+"Input for the `archiveDoors` mutation"
+input ArchiveDoorsInput {
+  "Array of IDs of doors to archive"
+  doorIds: [ID]!
+
+  "ID of shop that owns all doors you are archiving"
+  shopId: ID!
+}
+
+"Input for the `archiveDoors` mutation"
+input ArchiveDoorVariantsInput {
+  "ID of shop that owns all variants you are archiving"
+  shopId: ID!
+
+  "Array of IDs of variants to archive"
+  variantIds: [ID]!
+}
+
+"Input for the `updateDoorsVisibility` mutation"
+input UpdateDoorsVisibilityInput {
+  "The desired visibility"
+  isVisible: Boolean!
+
+  "Array of door ids to update"
+  doorIds: [ID]!
+
+  "ID of shop the doors belong to"
+  shopId: ID!
+}
+
+"Input for the `createDoor` mutation"
+input CreateDoorInput {
+  "Door input"
+  door: DoorInput
+
+  "ID of shop door will belong to"
+  shopId: ID!
+
+  "Set to false if you do not want to auto-create the first variant of the door"
+  shouldCreateFirstVariant: Boolean = true
+}
+
+"Input for the `createDoorVariant` mutation"
+input CreateDoorVariantInput {
+  "ID of door variant belongs to"
+  doorId: ID!
+
+  "ID of shop door variant will belong to"
+  shopId: ID!
+
+  "Variant input"
+  variant: DoorVariantInput
+}
+
+"Input for the `cloneDoors` mutation"
+input CloneDoorsInput {
+  "Array of IDs of doors to clone"
+  doorIds: [ID]!
+
+  "ID of shop that owns all doors you are cloning"
+  shopId: ID!
+}
+
+"Input for the `cloneDoorVariants` mutation"
+input CloneDoorVariantsInput {
+  "ID of shop that owns all door variants you want to clone"
+  shopId: ID!
+
+  "Array of IDs of variants to clone"
+  variantIds: [ID]!
+}
+
+"Input for the `updateDoor` mutation"
+input UpdateDoorInput {
+  "Door input"
+  door: DoorInput!
+
+  "ID of door to update"
+  doorId: ID!
+
+  "ID of shop that owns the door to update"
+  shopId: ID!
+}
+
+"Mutation input for a door"
+input DoorInput {
+  """
+  Any string to use as the internal ID for a new door. Do not prefix or base64 encode this ID.
+  This field is allowed only when creating a door. If you include an ID for an update, you
+  will get an error. The string must also be different from any existing door, variant, or
+  option internal ID or you will get a duplicate ID error. If you do not include this when creating
+  a door, a random unique string is generated for you.
+  """
+  _id: String
+
+  "The full door description, which may have newline characters in it"
+  description: String
+
+  "Facebook message"
+  facebookMsg: String
+
+  "Google message"
+  googleplusMsg: String
+
+  doorVariant: [DoorVariantInput]
+
+  "True if this door has been deleted. Typically, deleted doors are not returned in queries."
+  isDeleted: Boolean
+
+  "True if this door should be shown to shoppers. Typically, non-visible doors are not returned in queries."
+  isVisible: Boolean
+
+  "The door description to use for page `description` meta element in HTML"
+  metaDescription: String
+
+  "Arbitrary additional metadata about this door"
+  metafields: [MetafieldInput]
+
+  "The country of origin"
+  originCountry: String
+
+  "Subtitle"
+  pageTitle: String
+
+  "Pinterest message"
+  pinterestMsg: String
+
+  "An arbitrary door type value, such as from an external system"
+  doorType: String
+
+  "Whether this door will be shown in the generated sitemap"
+  shouldAppearInSitemap: Boolean
+
+  "A URL-safe and human-readable string that uniquely identifies this door"
+  slug: String
+
+  "When a shopper purchases this door, what types of fulfillment can they choose from?"
+  supportedFulfillmentTypes: [FulfillmentType]
+
+  "The list of tag IDs that have been applied to this door"
+  tagIds: [ID]
+
+  "Door title"
+  title: String
+
+  "Twitter message"
+  twitterMsg: String
+
+  "The door vendor or manufacturer, for display"
+  vendor: String
+}
+
+"Mutation input for a door variant or option"
+input DoorVariantInput {
+  """
+  Any string to use as the internal ID for a new variant. Do not prefix or base64 encode this ID.
+  This field is allowed only when creating a variant. If you include an ID for an update, you
+  will get an error. The string must also be different from any existing door, variant, or
+  option internal ID or you will get a duplicate ID error. If you do not include this when creating
+  a variant, a random unique string is generated for you.
+  """
+  _id: String
+
+  """
+  The attribute label describes the category of variant, for example, `Color` or `Size`.
+  In most cases this will be the same for all variants at the same level.
+  """
+  attributeLabel: String
+
+  "The door variant barcode value, if it has one"
+  barcode: String
+
+  "The height of the door variant, if it has physical dimensions"
+  height: Float
+
+  "The position of this variant among other variants at the same level of the door-variant-option hierarchy"
+  index: Int
+
+  "True if this variant was deleted. Deleted variants are not published to the catalog."
+  isDeleted: Boolean
+
+  "True if this variant is visible. Hidden variants are not published to the catalog."
+  isVisible: Boolean
+
+  "The length of the door, if it has physical dimensions"
+  length: Float
+
+  "Arbitrary additional metadata about this door"
+  metafields: [MetafieldInput]
+
+  "The minimum quantity that must be added to a cart"
+  minOrderQuantity: Int
+
+  "A short title to use for door detail select lists"
+  optionTitle: String
+
+  "The country of origin"
+  originCountry: String
+
+  "SKU of variant"
+  sku: String
+
+  """
+  The full variant title for use on cart, checkout, and order summaries and on invoices.
+  This fully describes the configured variant. For example, if this is an option with
+  `optionTitle` `Large`, its parent variant has `optionTitle` `Red`, and the door
+  `title` is `Fancy T-Shirt`, then this `title` will be something like `Fancy T-Shirt - Red - Large`.
+  """
+  title: String
+
+  "The weight of the door on Earth, if it has physical dimensions"
+  weight: Float
+
+  "The width of the door, if it has physical dimensions"
+  width: Float
+}
+
+input itemSizeInput {
+  width: Float
+  height: Float
+}
+
+"Input for the `updateDoorVariantField` mutation"
+input UpdateDoorVariantInput {
+  "ID of shop that owns the variant to update"
+  shopId: ID!
+
+  "Variant input"
+  variant: DoorVariantInput!
+
+  "ID of variant to update"
+  variantId: ID!
+}
+
+"The fields by which you are allowed to sort any query that returns a `DoorConnection`"
+enum DoorSortByField {
+  "Door ID"
+  _id
+
+  "Date and time the door was created"
+  createdAt
+
+  "Door title"
+  title
+
+  "Date and time the door was last updated"
+  updatedAt
+}
+
+extend type Mutation {
+  "Archive doors"
+  archiveDoors("Mutation input" input: ArchiveDoorsInput!): ArchiveDoorsPayload!
+
+  "Archive door variants"
+  archiveDoorVariants(
+    "Mutation input"
+    input: ArchiveDoorVariantsInput!
+  ): ArchiveDoorVariantsPayload!
+
+  "Update the isVisible property of an array of doors"
+  updateDoorsVisibility(
+    "Mutation input"
+    input: UpdateDoorsVisibilityInput!
+  ): UpdateDoorsVisibilityPayload!
+
+  "Create a new door"
+  createDoor("Mutation input" input: CreateDoorInput!): CreateDoorPayload!
+
+  "Create a new door variant"
+  createDoorVariant(
+    "Mutation input"
+    input: CreateDoorVariantInput!
+  ): CreateDoorVariantPayload!
+
+  "Clone an existing door"
+  cloneDoors("Mutation input" input: CloneDoorsInput!): CloneDoorsPayload!
+
+  "Clone an existing door variant"
+  cloneDoorVariants(
+    "Mutation input"
+    input: CloneDoorVariantsInput!
+  ): CloneDoorVariantsPayload!
+
+  "Update an existing door"
+  updateDoor("Mutation input" input: UpdateDoorInput!): UpdateDoorPayload!
+
+  "Update an existing door variant"
+  updateDoorVariant(
+    "Mutation input"
+    input: UpdateDoorVariantInput!
+  ): UpdateDoorVariantPayload!
+}
+
+extend type Query {
+  "Query for a single Door"
+  door(
+    "Door ID"
+    doorId: ID
+
+    "Door Sizes"
+    size: itemSizeInput
+
+    "Type of Door i.e. (Simple or Variant)"
+    type: String
+    "Shop ID"
+    shopId: ID!
+  ): [Door]
+
+  "Query for a list of Doors"
+  doors(
+    "Filter by archived"
+    isArchived: Boolean
+
+    "Filter by visibility"
+    isVisible: Boolean
+
+    "Filter by metafield key"
+    metafieldKey: String
+
+    "Filter by metafield value"
+    metafieldValue: String
+
+    "Filter by price range maximum value"
+    priceMax: Float
+
+    "Filter by price range minimum value"
+    priceMin: Float
+
+    "List of door IDs to filter by"
+    doorIds: [ID]
+
+    "Regex metch query string"
+    query: String
+
+    "List of shop IDs to filter by"
+    shopIds: [ID]!
+
+    "List of tag ids to filter by"
+    tagIds: [ID]
+
+    "Return only results that come after this cursor. Use this with `first` to specify the number of results to return."
+    after: ConnectionCursor
+
+    "Return only results that come before this cursor. Use this with `last` to specify the number of results to return."
+    before: ConnectionCursor
+
+    "Return at most this many results. This parameter may be used with either `after` or `offset` parameters."
+    first: ConnectionLimitInt
+
+    "Return at most this many results. This parameter may be used with the `before` parameter."
+    last: ConnectionLimitInt
+
+    "Return only results that come after the Nth result. This parameter may be used with the `first` parameter."
+    offset: Int
+
+    "Return results sorted in this order"
+    sortOrder: SortOrder = desc
+
+    "By default, doors are sorted by createdAt. Set this to sort by one of the other allowed fields"
+    sortBy: DoorSortByField = createdAt
+  ): DoorConnection
+}
